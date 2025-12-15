@@ -58,8 +58,10 @@ function setFormValues(form, params) {
     // Set start date and time if available
     if (params.start_date) {
         let sd = new Date(params.start_date);
-        form["start_date"].value = sd.toISOString().substr(0, 10);
-        form["start_time"].value = params.start_date.substr(11);
+        if (sd != "Invalid Date") {
+            form["start_date"].value = sd.toISOString().substr(0, 10);
+            form["start_time"].value = params.start_date.substr(11);
+        }
     }
 
     // Set end date and time if available
@@ -75,24 +77,48 @@ function setFormValues(form, params) {
         }
     }
 
-    // Set other form fields like name, status, description, hours, and minutes
-    ['name', 'status', 'description', 'hours', 'minutes'].forEach(field => {
-        if (params[field]) {
-            form[field].value = params[field];
-        }
-    });
+    // Set task name
+    if (params.name) {
+        document.getElementById("Name__c").value = params.name;
+    }
+
+    // Set description (form field name is 'notes', params has 'description')
+    if (params.description) {
+        document.getElementById("Description__c").value = params.description;
+    }
+
+    // Set hours and minutes
+    if (params.hours) {
+        document.getElementById("hours").value = params.hours;
+    }
+    if (params.minutes) {
+        document.getElementById("minutes").value = params.minutes;
+    }
+
+    // Set status dropdown
+    if (params.status) {
+        document.getElementById("Status__c").value = params.status;
+    }
 
     // Show end date field if status is Completed
     if (params.status === "Completed") {
         document.getElementById("enddatestatus").style.display = 'block';
     }
 
+    // Set project name
+    if (params.project_name) {
+        document.getElementById("lookupProject").value = params.project_name;
+    }
+    if (params.project_id) {
+        document.getElementById("lookupProject").setAttribute('data-info', params.project_id);
+    }
+
     // Set owner name and ID
     if (params.user_name) {
-        form["owner"].value = params.user_name;
+        document.getElementById("lookupOwner").value = params.user_name;
     }
     if (params.user_id) {
-        document.querySelector("#lookupOwner").setAttribute('data-info', params.user_id);
+        document.getElementById("lookupOwner").setAttribute('data-info', params.user_id);
     }
 
     // Set task type dropdown if the type is available in params
