@@ -44,6 +44,7 @@ googleLoginBtn.onclick = async () => {
 
         if (docSnap.exists) {
             // Success!
+            await logLoginEvent(email, db);
             localStorage.setItem('firebase_user_email', email);
             showLoginForm();
         } else {
@@ -57,6 +58,7 @@ googleLoginBtn.onclick = async () => {
                     photoURL: user.photoURL,
                     autoApproved: true
                 });
+                await logLoginEvent(email, db);
                 localStorage.setItem('firebase_user_email', email);
                 showLoginForm();
             } else {
@@ -80,6 +82,24 @@ googleLoginBtn.onclick = async () => {
         console.error("Auth Error:", error);
         authStatus.innerText = "Error: " + error.message;
         authStatus.className = "text-sm text-red-600";
+    }
+}
+
+async function logLoginEvent(email, db) {
+    try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        const ip = ipData.ip;
+
+        await db.collection("login_logs").add({
+            email: email,
+            ip: ip,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent
+        });
+        console.log("Login logged:", ip);
+    } catch (error) {
+        console.error("Failed to log login event:", error);
     }
 }
 
