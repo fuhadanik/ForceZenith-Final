@@ -22,6 +22,30 @@ Thumbs.db
 *.swp
 *.swo
 
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # Logs
 *.log
 npm-debug.log*
@@ -30,6 +54,5 @@ yarn-error.log*
 
 # Chrome extension files (not needed for web deployment)
 manifest.json
-background.js
 content.js
 popup.*

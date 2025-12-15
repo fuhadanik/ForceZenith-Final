@@ -41,6 +41,26 @@ async function login(value) {
         const savedEmail = localStorage.getItem('firebase_user_email');
         
         if (!savedEmail || savedEmail !== email) {
+            const db = window.db;
+            if (!db) throw new Error("Database not initialized");
+
+            const docRef = db.collection("allowed_users").doc(email);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
+                const errorDiv = document.getElementById("loginError");
+                if (errorDiv) {
+                    errorDiv.innerText = "Access Denied: Your email is not on the allowed list. Please contact the Administrator.";
+                    errorDiv.classList.remove("hidden");
+                } else {
+                    alert("Access Denied: Your email is not on the allowed list. Please contact the Administrator.");
+                }
+                return; // Stop execution
+            }
+        }
+
+        // 2. Proceed with Salesforce Login
+        const headers = {};
         const data = new URLSearchParams();
         data.append("username", formProps.username);
         data.append("password", formProps.password);
@@ -56,17 +76,35 @@ async function login(value) {
                     setCookie("login", result.user_id, 24);
                     window.location = "./home.html";
                 } else {
-                    alert("invalid username or password !")
+                    const errorDiv = document.getElementById("loginError");
+                    if (errorDiv) {
+                        errorDiv.innerText = "Invalid username or password!";
+                        errorDiv.classList.remove("hidden");
+                    } else {
+                        alert("invalid username or password !");
+                    }
                 }
             })
             .catch(error => {
                 console.error(error);
-                alert(error.message);
+                const errorDiv = document.getElementById("loginError");
+                if (errorDiv) {
+                    errorDiv.innerText = error.message;
+                    errorDiv.classList.remove("hidden");
+                } else {
+                    alert(error.message);
+                }
             });
 
     } catch (error) {
         console.error("Error checking access permission:", error);
-        alert("System Error: Could not verify access permission. Please check your internet connection or contact Admin.");
+        const errorDiv = document.getElementById("loginError");
+        if (errorDiv) {
+            errorDiv.innerText = "System Error: Could not verify access permission. Please check your internet connection or contact Admin.";
+            errorDiv.classList.remove("hidden");
+        } else {
+            alert("System Error: Could not verify access permission. Please check your internet connection or contact Admin.");
+        }
     }
 }
 
