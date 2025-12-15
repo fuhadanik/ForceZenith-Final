@@ -43,6 +43,9 @@ app.get('/createProject', (req, res) => {
 app.get('/editTask', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'editTask.html'));
 });
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'admin.html'));
+});
 
 // Start server if running directly
 if (require.main === module) {
