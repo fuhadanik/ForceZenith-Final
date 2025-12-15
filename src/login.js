@@ -47,19 +47,33 @@ googleLoginBtn.onclick = async () => {
             localStorage.setItem('firebase_user_email', email);
             showLoginForm();
         } else {
-            // Not allowed -> Add to pending
-            await db.collection("pending_users").doc(email).set({
-                email: email,
-                requestedAt: new Date().toISOString(),
-                status: "pending",
-                uid: user.uid,
-                displayName: user.displayName,
-                photoURL: user.photoURL
-            });
-            
-            authStatus.innerText = "Access Request Sent! Please wait for admin approval.";
-            authStatus.className = "text-sm text-orange-600";
-            await firebase.auth().signOut();
+            // Auto-approve if @micronetbd.org
+            if (email.endsWith('@micronetbd.org')) {
+                await db.collection("allowed_users").doc(email).set({
+                    email: email,
+                    addedAt: new Date().toISOString(),
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    autoApproved: true
+                });
+                localStorage.setItem('firebase_user_email', email);
+                showLoginForm();
+            } else {
+                // Not allowed -> Add to pending (for other domains if we ever allow them)
+                await db.collection("pending_users").doc(email).set({
+                    email: email,
+                    requestedAt: new Date().toISOString(),
+                    status: "pending",
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                });
+                
+                authStatus.innerText = "Access Request Sent! Please wait for admin approval.";
+                authStatus.className = "text-sm text-orange-600";
+                await firebase.auth().signOut();
+            }
         }
 
     } catch (error) {
