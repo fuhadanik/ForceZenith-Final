@@ -18,25 +18,75 @@ async function makeHttpRequest(url, method, headers, data) {
     }
 
     try {
-        // Log request details for debugging
-        //console.log(`Making HTTP request: ${method} ${APIURL + url}`, requestOptions);
-
-        // Making the HTTP request using Axios
         const response = await axios(requestOptions);
-
-        // Log response data for verification
-        //console.log(`Response received from ${url}:`, response.data);
-
-        // Check for success response
         if (response.data.success) {
             return response.data;
         } else {
-            // Log error details if the success flag is not true
             console.error(`Error in response from ${url}:`, response.data);
             throw new Error(`Request failed: ${JSON.stringify(response.data)}`);
         }
     } catch (error) {
-        // Log and re-throw the error for the caller to handle
+        console.error(`Error in makeHttpRequest for ${url}:`, error);
+        throw error;
+    }
+}
+
+async function login(value) {
+    const formProps = Object.fromEntries(value);
+    const email = formProps.username.toLowerCase();
+
+    try {
+        // 1. Check if user is in Allowed List (Firebase)
+        // Skip check if already authenticated via Google
+        const savedEmail = localStorage.getItem('firebase_user_email');
+        
+        if (!savedEmail || savedEmail !== email) {
+            const db = window.db;
+            if (!db) throw new Error("Database not initialized");
+
+            const docRef = db.collection("allowed_users").doc(email);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
+                alert("Access Denied: Your email is not on the allowed list. Please contact the Administrator.");
+                return; // Stop execution
+            }
+        }
+
+        // 2. Proceed with Salesforce Login
+        const headers = {};
+        const data = new URLSearchParams();
+        data.append("username", formProps.username);
+        data.append("password", formProps.password);
+
+        makeHttpRequest('login', 'POST', headers, data)
+            .then(result => {
+                if (result.success) {
+                    console.log("login data", result)
+                    localStorage.setItem('default_project_types', result.default_project_types)
+                    localStorage.setItem('default_project_status', result.default_task_types)
+                    localStorage.setItem('default_task_types', result.default_task_types)
+                    localStorage.setItem('default_task_status', result.default_task_status)
+                    setCookie("login", result.user_id, 24);
+                    window.location = "./home.html";
+                } else {
+                    alert("invalid username or password !")
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message);
+            });
+
+    } catch (error) {
+        console.error("Error checking access permission:", error);
+        alert("System Error: Could not verify access permission. Please check your internet connection or contact Admin.");
+    }
+}
+
+function getAllTasks(owner, projects, startDate, endDate) {
+    function processTasks(data) {
+        let tasks = [];
         if (!data) return tasks
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].users.length; j++) {
@@ -59,7 +109,6 @@ async function makeHttpRequest(url, method, headers, data) {
                         case 'In Progress':
                             statusClass = 'slds-button_brand';
                             break;
-
                         default:
                             statusClass = 'slds-button_neutral';
                             break;
@@ -84,7 +133,6 @@ async function makeHttpRequest(url, method, headers, data) {
             }
         }
         return false;
-
     }
     return new Promise((resolve, reject) => {
         var headers = {
@@ -102,12 +150,11 @@ async function makeHttpRequest(url, method, headers, data) {
         }
         makeHttpRequest('task/list', 'POST', headers, JSON.stringify(payload)).then(result => {
             if (result) {
-                resolve(getAllTasks(result.projects));
+                resolve(processTasks(result.projects));
             } else {
                 resolve([]);
             }
         })
-
     })
 }
 
@@ -127,7 +174,6 @@ function removeTask(url) {
                 alert(error.message);
             });
     })
-
 }
 
 function createTask(formProps) {
@@ -152,8 +198,6 @@ function createTask(formProps) {
             urlencoded.append("end_date", formProps.end_date);
         }
 
-        console.log('URL encoded data:', Object.fromEntries(urlencoded));
-
         makeHttpRequest('task', 'POST', headers, urlencoded)
             .then(result => {
                 console.log('Task creation result:', result);
@@ -167,9 +211,9 @@ function createTask(formProps) {
                 console.error('Task creation error:', error);
                 alert(error.message);
             });
-
     })
 }
+
 function getTask(payload) {
     return new Promise((resolve, reject) => {
         var headers = {
@@ -178,7 +222,6 @@ function getTask(payload) {
         };
         makeHttpRequest('task/list', 'POST', headers, JSON.stringify(payload)).then(result => {
             console.log(result)
-
             if (result.projects) {
                 resolve(result.projects[0].users[0].tasks[0]);
             } else {
@@ -187,10 +230,9 @@ function getTask(payload) {
         })
     })
 }
+
 function editTask(editdata) {
     return new Promise((resolve, reject) => {
-
-        //console.log('editdata', editdata)
         var headers = {
             'task_manager_id': getCookie("login")
         };
@@ -217,8 +259,8 @@ function editTask(editdata) {
             }
         })
     })
-
 }
+
 function search(url) {
     return new Promise((resolve, reject) => {
         var headers = {
@@ -239,7 +281,6 @@ function search(url) {
                 console.error('Search API error:', error);
                 reject(error);
             });
-
     })
 }
 
