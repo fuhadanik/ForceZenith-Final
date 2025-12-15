@@ -1,7 +1,3 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCPs2SYjx5H5atfhm02yjD4l8hoG6D1pog",
@@ -13,8 +9,12 @@ const firebaseConfig = {
   measurementId: "G-FZ67T8NM0J"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-export { db, collection, doc, setDoc, getDoc, deleteDoc, getDocs };
+// Initialize Firebase (Compat)
+if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    window.db = db; // Expose to global scope
+    console.log("Firebase initialized successfully");
+} else {
+    console.error("Firebase SDK not loaded!");
+}
