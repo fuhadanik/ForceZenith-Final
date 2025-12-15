@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/output.css">
     <link rel="icon" type="image/png" href="../icon.png">
-    <title>Sales Force</title>
+    <title>SALESFORCE</title>
 </head>
 
-<body class="flex items-center justify-center min-h-screen bg-slate-50">
+<body class="flex flex-col items-center justify-center min-h-screen bg-slate-50">
     <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-lg">
         <div class="flex flex-col items-center">
             <img class="w-48 mb-4" src="Logo.png" alt="ForceZenith Logo">
-            <h2 class="text-2xl font-bold text-gray-900">Welcome</h2>
+            <h2 class="text-2xl font-bold text-gray-900">Welcome to ForceZenith</h2>
             <p class="text-sm text-gray-500">Sign in to your account</p>
         </div>
 
@@ -45,6 +45,8 @@
                 </div>
             </div>
 
+            <div id="loginError" class="text-sm text-red-600 text-center hidden"></div>
+
             <div>
                 <button type="button" id="login"
                     class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200">
@@ -53,6 +55,10 @@
             </div>
         </form>
     </div>
+
+    <footer class="mt-8 text-center text-gray-500 text-sm">
+        <p>Developed by Fuhad Hossain</p>
+    </footer>
 
     <!-- Request Access Modal (Removed, replaced by Google Auth flow) -->
 </body>

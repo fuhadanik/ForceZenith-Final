@@ -41,20 +41,6 @@ async function login(value) {
         const savedEmail = localStorage.getItem('firebase_user_email');
         
         if (!savedEmail || savedEmail !== email) {
-            const db = window.db;
-            if (!db) throw new Error("Database not initialized");
-
-            const docRef = db.collection("allowed_users").doc(email);
-            const docSnap = await docRef.get();
-
-            if (!docSnap.exists) {
-                alert("Access Denied: Your email is not on the allowed list. Please contact the Administrator.");
-                return; // Stop execution
-            }
-        }
-
-        // 2. Proceed with Salesforce Login
-        const headers = {};
         const data = new URLSearchParams();
         data.append("username", formProps.username);
         data.append("password", formProps.password);
