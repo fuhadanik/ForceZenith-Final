@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Search</title>
+</head>
+<body>
+    <h1>Search Test Page</h1>
+    <input type="text" id="searchInput" placeholder="Type to search...">
+    <div id="results"></div>
+
+    <script src="./src/axios.js"></script>
+    <script src="./src/localCookie.js"></script>
+    <script src="./src/api.js"></script>
+    <script>
+        console.log('Test page loaded');
+        const input = document.getElementById('searchInput');
+        const results = document.getElementById('results');
+        
+        input.addEventListener('keyup', (e) => {
+            const value = e.target.value;
+            console.log('Keyup event, value:', value);
+            
+            if (value.length > 2) {
+                console.log('Calling search API...');
+                search('project?search_string=' + value)
+                    .then(data => {
+                        console.log('Search successful:', data);
+                        results.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    })
+                    .catch(err => {
+                        console.error('Search failed:', err);
+                        results.innerHTML = '<pre style="color:red">Error: ' + err.message + '</pre>';
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

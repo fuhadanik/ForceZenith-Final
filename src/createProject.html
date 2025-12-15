@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/output.css">
+    <link rel="icon" type="image/png" href="../icon.png">
+    <title>Create Project - ForceZenith</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="./home.html" class="flex-shrink-0">
+                        <img class="h-8 w-auto" src="../Logo.png" alt="ForceZenith">
+                    </a>
+                    <h1 class="ml-4 text-xl font-bold text-gray-900">Create Project</h1>
+                </div>
+                <a href="./home.html" class="text-gray-500 hover:text-gray-700">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow px-6 py-8">
+            <form id="createProjectForm" class="space-y-6">
+                <!-- Project Name -->
+                <div>
+                    <label for="Name" class="block text-sm font-medium text-gray-700">Project Name</label>
+                    <input type="text" id="Name" name="Name" required
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
+                        placeholder="Enter project name">
+                </div>
+
+                <!-- Project Type -->
+                <div>
+                    <label for="Project_Type__c" class="block text-sm font-medium text-gray-700">Project Type</label>
+                    <select id="Project_Type__c" name="Project_Type__c"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Manager and Client -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Manager -->
+                    <div>
+                        <label for="lookupManager" class="block text-sm font-medium text-gray-700">Manager</label>
+                        <div class="relative">
+                            <input type="text" id="lookupManager" name="manager" value="Current User"
+                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
+                                placeholder="Search Manager..." autocomplete="off">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="lookupManagerList" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden">
+                            <ul id="ManagerList" class="divide-y divide-gray-200"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Client -->
+                    <div>
+                        <label for="lookupClient" class="block text-sm font-medium text-gray-700">Client</label>
+                        <div class="relative">
+                            <input type="text" id="lookupClient" name="client_account" required
+                                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
+                                placeholder="Search Client..." autocomplete="off">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="lookupClientList" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden">
+                            <ul id="ClientList" class="divide-y divide-gray-200"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input type="date" id="start_date" name="Start_Date__c"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+                        <input type="date" id="end_date" name="End_Date__c"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="Description__c" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="Description__c" name="Description__c" rows="4"
+                        class="mt-1 shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Enter project description..."></textarea>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                    <a href="./home.html"
+                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Cancel
+                    </a>
+                    <button type="submit" id="createProject"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Create Project
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="./mock-chrome.js"></script>
+    <script src="./background.js"></script>
+    <script src="./axios.js"></script>
+    <script src="./localCookie.js"></script>
+    <script src="./api.js"></script>
+    <script src="./createProject.js"></script>
+</body>
+
+</html>
