@@ -38,9 +38,9 @@ projecttypes = projecttypes.split(',');
   
       search('user?search_string=' + value).then(x => {
         document.getElementById("lookupManagerList").style.display = "block";
-        document.getElementById("managersList").innerHTML = "";
+        document.getElementById("ManagerList").innerHTML = "";
         x.users.forEach(el => {
-          document.getElementById("managersList").innerHTML += `
+          document.getElementById("ManagerList").innerHTML += `
                   <li role="picker" class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100" data-info="${el.user_id}">
                   <div class="flex items-center">
                     <span class="font-normal block truncate">
@@ -73,9 +73,9 @@ projecttypes = projecttypes.split(',');
   
       search('client?search_string=' + value).then(x => {
         document.getElementById("lookupClientList").style.display = "block";
-        document.getElementById("clientList").innerHTML = "";
+        document.getElementById("ClientList").innerHTML = "";
         x.users.forEach(el => {
-          document.getElementById("clientList").innerHTML += `
+          document.getElementById("ClientList").innerHTML += `
                   <li role="picker" class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100" data-info="${el.client_id}">
                   <div class="flex items-center">
                     <span class="font-normal block truncate">

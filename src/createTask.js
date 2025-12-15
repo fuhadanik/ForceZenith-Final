@@ -111,9 +111,9 @@ document.getElementById("lookupOwner").onkeyup = (e) => {
     if (value === '') return document.getElementById("lookupOwnerList").style.display = "none";
     search('user?search_string=' + value).then(x => {
       document.getElementById("lookupOwnerList").style.display = "block";
-      document.getElementById("OwnersList").innerHTML = "";
+      document.getElementById("OwnerList").innerHTML = "";
       x.users.forEach(el => {
-        document.getElementById("OwnersList").innerHTML += `
+        document.getElementById("OwnerList").innerHTML += `
                 <li role="picker" class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100" data-info="${el.user_id}">
                   <div class="flex items-center">
                     <span class="font-normal block truncate">

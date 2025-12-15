@@ -150,9 +150,9 @@ function ownerLookup(e) {
 // Update owner list based on lookup results
 function updateOwnerList(e, data) {
     document.getElementById("lookupOwnerList").style.display = "block";
-    document.getElementById("OwnersList").innerHTML = "";
+    document.getElementById("OwnerList").innerHTML = "";
     data.users.forEach((el) => {
-        document.getElementById("OwnersList").innerHTML += `
+        document.getElementById("OwnerList").innerHTML += `
             <li role="picker" class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100" data-info="${el.user_id}">
                 <div class="flex items-center">
                     <span class="font-normal block truncate">
