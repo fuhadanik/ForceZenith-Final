@@ -107,3 +107,13 @@ function showLoginForm() {
     authSection.classList.add('hidden');
     loginForm.classList.remove('hidden');
 }
+
+// Switch Account Logic
+const switchAccountBtn = document.getElementById("switchAccountBtn");
+if (switchAccountBtn) {
+    switchAccountBtn.onclick = async () => {
+        localStorage.removeItem('firebase_user_email');
+        await firebase.auth().signOut();
+        window.location.reload();
+    }
+}
