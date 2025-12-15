@@ -89,10 +89,23 @@ async function login(value) {
                 console.error(error);
                 const errorDiv = document.getElementById("loginError");
                 if (errorDiv) {
-                    errorDiv.innerText = error.message;
+                    let message = error.message;
+                    // Try to parse JSON error message
+                    if (message.includes("Request failed:")) {
+                        try {
+                            const jsonStr = message.replace("Request failed: ", "");
+                            const errorObj = JSON.parse(jsonStr);
+                            if (errorObj.success === false) {
+                                message = "Invalid username or password!";
+                            }
+                        } catch (e) {
+                            // Failed to parse, keep original message
+                        }
+                    }
+                    errorDiv.innerText = message;
                     errorDiv.classList.remove("hidden");
                 } else {
-                    alert(error.message);
+                    alert("Invalid username or password!");
                 }
             });
 
