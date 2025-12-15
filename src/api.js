@@ -1,7 +1,5 @@
-// Use proxy on localhost, direct URL on Vercel
-var APIURL = window.location.hostname === 'localhost' 
-    ? '/services/apexrest/' 
-    : 'https://micronetbd.my.salesforce-sites.com/services/apexrest/';
+var APIURL = '/services/apexrest/'; // Use relative path for proxy
+// var APIURL = 'https://micronetbd.my.salesforce-sites.com/services/apexrest/';
 
 async function makeHttpRequest(url, method, headers, data) {
     // Preparing request options
