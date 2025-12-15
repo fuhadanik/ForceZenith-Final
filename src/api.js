@@ -43,6 +43,23 @@ async function makeHttpRequest(url, method, headers, data) {
 }
 
 
+async function requestAccess(email) {
+    try {
+        const { db, doc, setDoc } = await import("./firebase-init.js");
+        
+        // Add to 'pending_users' collection
+        await setDoc(doc(db, "pending_users", email), {
+            email: email,
+            requestedAt: new Date().toISOString(),
+            status: "pending"
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Error requesting access:", error);
+        return { success: false, error: error.message };
+    }
+}
+
 async function login(value) {
     const formProps = Object.fromEntries(value);
     const email = formProps.username.toLowerCase(); // Assuming username is email

@@ -52,6 +52,8 @@ addUserBtn.addEventListener('click', async () => {
 
 // Load Users Logic
 async function loadUsers() {
+    await loadPendingUsers(); // Load pending requests first
+    
     userTableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center">Loading...</td></tr>';
     
     try {
@@ -90,5 +92,68 @@ async function loadUsers() {
     } catch (error) {
         console.error("Error loading users: ", error);
         userTableBody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-red-500">Error loading users: ${error.message}</td></tr>`;
+    }
+}
+
+// Load Pending Users Logic
+const pendingTableBody = document.getElementById('pendingTableBody');
+
+async function loadPendingUsers() {
+    pendingTableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center">Loading...</td></tr>';
+    
+    try {
+        const querySnapshot = await getDocs(collection(db, "pending_users"));
+        pendingTableBody.innerHTML = ''; // Clear loading
+
+        if (querySnapshot.empty) {
+            pendingTableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No pending requests.</td></tr>';
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const user = doc.data();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.email}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(user.requestedAt).toLocaleDateString()}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <button class="text-green-600 hover:text-green-900 approve-btn" data-email="${user.email}">Approve</button>
+                    <button class="text-red-600 hover:text-red-900 reject-btn" data-email="${user.email}">Reject</button>
+                </td>
+            `;
+            pendingTableBody.appendChild(row);
+        });
+
+        // Attach approve event listeners
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const email = e.target.getAttribute('data-email');
+                if (confirm(`Approve access for ${email}?`)) {
+                    // 1. Add to allowed_users
+                    await setDoc(doc(db, "allowed_users", email), {
+                        email: email,
+                        addedAt: new Date().toISOString()
+                    });
+                    // 2. Remove from pending_users
+                    await deleteDoc(doc(db, "pending_users", email));
+                    loadUsers(); // Refresh both lists
+                }
+            });
+        });
+
+        // Attach reject event listeners
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const email = e.target.getAttribute('data-email');
+                if (confirm(`Reject request from ${email}?`)) {
+                    await deleteDoc(doc(db, "pending_users", email));
+                    loadUsers(); // Refresh both lists
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error("Error loading pending users: ", error);
+        pendingTableBody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-red-500">Error loading pending users: ${error.message}</td></tr>`;
     }
 }

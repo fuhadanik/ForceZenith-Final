@@ -44,6 +44,24 @@
                 </button>
             </div>
         </form>
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-600">Don't have access?</p>
+            <button id="requestAccessBtn" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Request Access</button>
+        </div>
+    </div>
+
+    <!-- Request Access Modal -->
+    <div id="requestModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="text-lg font-bold mb-4">Request Access</h3>
+            <p class="text-sm text-gray-600 mb-4">Enter your email to request access to the application.</p>
+            <input type="email" id="requestEmail" placeholder="your.email@example.com" class="w-full border p-2 rounded mb-4">
+            <div class="flex justify-end gap-2">
+                <button id="cancelRequest" class="text-gray-500 hover:text-gray-700 px-3 py-1">Cancel</button>
+                <button id="submitRequest" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit</button>
+            </div>
+            <p id="requestStatus" class="mt-2 text-sm text-center"></p>
+        </div>
     </div>
 </body>
 <script src="/src/mock-chrome.js"></script>
