@@ -20,9 +20,11 @@ document.getElementById("login").onclick = () => {
 
 // Google Login Logic
 googleLoginBtn.onclick = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    
     try {
+        // Wait for Firebase to be initialized
+        await window.firebaseReady;
+        
+        const provider = new firebase.auth.GoogleAuthProvider();
         authStatus.innerText = "Signing in...";
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;

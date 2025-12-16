@@ -36,6 +36,9 @@ async function login(value) {
     const email = formProps.username.toLowerCase();
 
     try {
+        // Wait for Firebase to be initialized
+        await window.firebaseReady;
+        
         // 1. Check if user is in Allowed List (Firebase)
         // Skip check if already authenticated via Google
         const savedEmail = localStorage.getItem('firebase_user_email');
